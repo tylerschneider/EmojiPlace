@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Emoji Place</title>
+    <!-- Bootstrap -->
+	<link href="../../../Dylan/GIMM 300/css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link href="maps.css" rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+	  
+  	<div id="map"></div>
+
+	<script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCmVuL1h4IZ883yYHdLSJz7xBDhz3ba3Jw",
+		authDomain: "emoji-place-238404.firebaseapp.com",
+		databaseURL: "https://emoji-place-238404.firebaseio.com",
+		projectId: "emoji-place-238404",
+		storageBucket: "emoji-place-238404.appspot.com",
+		messagingSenderId: "438569932296"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	  <script src="firbaseController.js"></script>
+
+	<script src="../../../Dylan/GIMM 300/js/jquery-3.2.1.min.js"></script>
+
+	<script src="../../../Dylan/GIMM 300/js/popper.min.js"></script> 
+	<script src="../../../Dylan/GIMM 300/js/bootstrap-4.0.0.js"></script>
+	  <script src="maps.js"></script>
+	  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCajGGbRAbzvoXvBLEQqr5btkDmaIEZspA&callback=initMap" async defer></script>
+  </body>
+</html>
