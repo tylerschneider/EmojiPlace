@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>list</ion-title>
+      <ion-buttons button slot="start">
+          <ion-back-button defaultHref="../home"></ion-back-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-button size="large" (click)="editLocation(location)" routerLink="../home" routerDirection="forward">Save Changes</ion-button>
+    <ion-button size="large" (click)="deleteLocation(location)" routerLink="../home" routerDirection="forward">Delete</ion-button>
+    <ion-item>
+        <ion-label>
+            Location title:
+        </ion-label>
+        <ion-input [(ngModel)]="location.title" placeholder="title....."></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label>
+            Location content:
+        </ion-label>
+        <ion-input [(ngModel)]="location.content" placeholder="title....."></ion-input>
+    </ion-item>
+
+</ion-content>

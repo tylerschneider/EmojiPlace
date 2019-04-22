@@ -1,14 +1,24 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Ionic Blank
+      Emoji Place
     </ion-title>
+    <ion-buttons button slot="start">
+        <ion-back-button defaultHref="/pages/login"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+  <div #map id="map"></div>
+    <ion-list>
+        <ion-list-header>
+            Locations:
+        </ion-list-header>
+        <ion-item *ngFor="let location of locationsList$ | async"
+                  (click)="assignLocation(location)"
+                  [routerLink]="['/list', locationTitle]" routerDirection="forward">
+            {{location.title}}
+        </ion-item>
+    </ion-list>
 </ion-content>

@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+    production: false,
+    firebase: {
+        apiKey: "AIzaSyCmVuL1h4IZ883yYHdLSJz7xBDhz3ba3Jw",
+        authDomain: "emoji-place-238404.firebaseapp.com",
+        databaseURL: "https://emoji-place-238404.firebaseio.com",
+        projectId: "emoji-place-238404",
+        storageBucket: "emoji-place-238404.appspot.com",
+        messagingSenderId: "438569932296"
+    }
 };
 
 /*

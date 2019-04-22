@@ -24,8 +24,8 @@ function updateLocations(){
 
 function addMarker(map, location){
 	var pos = {
-		lat: location.latitude;
-		lng: location.longitude;
+		lat: location.latitude,
+		lng: location.longitude
 	}
 										
 	var marker = new google.maps.Marker({
@@ -33,10 +33,10 @@ function addMarker(map, location){
 		map: map
 	});
 	var contentString = '<div class="info-window" id="clickableItem" > ' + '<h3>' + location.title + '</h3>' + '<div class="info-content">' + location.picture + 'alt="picture" style="width:30px; height=30px; padding:20px, 20px, 20px, 20px;">' + '<p>' + location.content + '</p>' + '</div>' + '</div>';
-	var infoWindow = new google.maps.InfoWindow([
+	var infoWindow = new google.maps.InfoWindow({
 		content: contentString,
 		maxWidth: 400
-	]);
+	});
 	marker.addListener('click', function(){
 		infoWindow.open(map, marker);
 	});

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Location</ion-title>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/login"></ion-back-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-item>
+        <ion-label>
+            Location title:
+        </ion-label>
+        <ion-input [(ngModel)]="location.title" placeholder="title....."></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>
+            Location content:
+        </ion-label>
+        <ion-input [(ngModel)]="location.content" placeholder="title....."></ion-input>
+    </ion-item>
+
+    <ion-button size="large" (click)="addLocation(location)" routerLink="../home" routerDirection="forward">Add Location and Content</ion-button>
+</ion-content>
