@@ -1,0 +1,15 @@
+#map {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#searchbox {
+    margin: 0 !important;
+}
+
+.scroll-content {
+    overflow: hidden;
+}

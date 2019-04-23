@@ -1,0 +1,39 @@
+
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            Map
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-toolbar color="primary" id="searchbox">
+        <ion-searchbar [(ngModel)]="autocomplete" (ionChange)="updateSearchResults()" placeholder="Search"></ion-searchbar>
+    </ion-toolbar>
+
+    <ion-list [hidden]="autocompleteItems.length == 0">
+        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+            {{ item.description }}
+        </ion-item>
+    </ion-list>
+
+    <div #map id="map"></div>
+
+
+    <ion-img (click)="plusButton()" style="width: 74px; height: 74px; background: transparent !important;" src="assets/plusButton.png"></ion-img>
+
+    <ion-button size="large" (click)="addEmoji()" routerLink="../home" routerDirection="forward">Add Emoji</ion-button>
+
+     <!--<ion-list>
+
+        <ion-list-header>
+            Locations:
+        </ion-list-header>
+        <ion-item *ngFor="let location of locationsList$ | async"
+                  (click)="assignLocation(location)"
+                  [routerLink]="['/list', locationTitle]" routerDirection="forward">
+            {{location.title}}
+        </ion-item>
+    </ion-list> -->
+</ion-content>

@@ -1,0 +1,8 @@
+{
+  "name": "EmojiPlace",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "id": "e4626f48"
+}
