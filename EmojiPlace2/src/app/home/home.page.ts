@@ -1,10 +1,12 @@
 import { Component, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Platform } from '@ionic/angular'
 import { FirebaseService } from '../services/firebase.service';
 import { Location } from '../models/location.model';
 import 'rxjs-compat/add/operator/map';
 import { Observable } from 'rxjs-compat/Observable';
 import { Router } from '@angular/router';
+import { GoogleMaps, GoogleMap } from '@ionic-native/google-maps';
 
 declare var google;
 
@@ -21,13 +23,14 @@ export class HomePage implements OnInit {
     locationsList$: Observable<Location[]>;
 
     //variables
-    map: any;
+    map: GoogleMap;
     position: any;
     locationKey: any;
     currentLoc: any;
     markerPlaced: boolean;
     placeMarker: any;
-    latLng: any;
+    //latLng: any;
+    mapOptions: any;
 
     GoogleAutocomplete: any;
     autocomplete: string;
@@ -44,7 +47,7 @@ export class HomePage implements OnInit {
     }
 
     constructor(private router: Router, private geolocation: Geolocation,
-        public firebaseService: FirebaseService, public zone: NgZone) {
+        public firebaseService: FirebaseService, public zone: NgZone, public platform: Platform) {
         this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
             return changes.map(c => ({
                 key: c.payload.key, ...c.payload.val()
@@ -53,50 +56,57 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
-        this.geolocation.getCurrentPosition().then(pos => {
 
-            //find the user's position
-            let latLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+            //add markers for each item in the database (?)
+            /* this.firebaseService.getLocationsList().valueChanges().subscribe(res => {
+                 for (let item of res) {
+                     this.addMarker(item);
+                     this.position = new google.maps.LatLng(item.latitude, item.longitude);
+                     this.map.setCenter(this.position);
+                 }
+             });*/
 
-            let mapOptions = {
-                zoom: 15,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                mapTypeControl: false,
-                streetViewControl: false,
-                fullscreenControl: false,
-                clickableIcons: false,
 
-                //set map center to user's position
-                center: latLng
-            }
+                this.geolocation.getCurrentPosition().then(pos => {
 
-            //create map
-            this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+                    //find the user's position
+                    let latLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 
-            //create the autocomplete service, input, and array for predictions 
-            this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-            this.autocomplete = '';
-            this.autocompleteItems = [];
-            this.geocoder = new google.maps.Geocoder;
+                    //this.createMap(latLng);
 
-            //add event listener to the map to look for taps/clicks, which will place a marker
-            google.maps.event.addListener(this.map, 'click', (event) => {
-                this.markerClick(this.map, event.latLng);
-            });
+                    let mapOptions = {
+                        zoom: 15,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        mapTypeControl: false,
+                        streetViewControl: false,
+                        fullscreenControl: false,
+                        clickableIcons: false,
+                        center: latLng
+                    }
 
-            //add a marker at center (user's location) on load
-            this.markerClick(this.map, latLng);
+                    //create map
+                    this.map = GoogleMaps.create(this.mapElement.nativeElement, this.mapOptions);
 
-        });
+                    //add event listener to the map to look for taps/clicks, which will place a marker
+                    google.maps.event.addListener(this.map, 'click', (event) => {
+                        this.markerClick(this.map, event.latLng);
+                    });
 
-        //add markers for each item in the database (?)
-       /* this.firebaseService.getLocationsList().valueChanges().subscribe(res => {
-            for (let item of res) {
-                this.addMarker(item);
-                this.position = new google.maps.LatLng(item.latitude, item.longitude);
-                this.map.setCenter(this.position);
-            }
-        });*/
+                    //this.map.setCenter(geo);
+
+                    //create the autocomplete service, input, and array for predictions 
+                    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+                    this.autocomplete = '';
+                    this.autocompleteItems = [];
+                    this.geocoder = new google.maps.Geocoder;
+
+                    //add a marker at center (user's location) on load
+                    this.markerClick(this.map, latLng);
+                });
+
+    }
+
+    createMap(geo: any) {
 
 
     }
@@ -129,7 +139,7 @@ export class HomePage implements OnInit {
                 var resultPos = new google.maps.LatLng(results[0].geometry.location.lat, results[0].geometry.location.lng);
             }*/
 
-            this.map.setCenter(results[0].geometry.location);
+            this.map.moveCamera(results[0].geometry.location);
             this.markerClick(this.map, results[0].geometry.location);
         });
     }

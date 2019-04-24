@@ -17,20 +17,22 @@ import { environment } from '../environments/environment';
 import * as firebase from "firebase";
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { GoogleMaps } from "@ionic-native/google-maps";
 
 firebase.initializeApp(environment.firebase);
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
-      AngularFireModule.initializeApp(environment.firebase), AngularFireDatabaseModule, AngularFireStorageModule
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    FirebaseService,
-    Geolocation,
+    declarations: [AppComponent],
+    entryComponents: [],
+    imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
+        AngularFireModule.initializeApp(environment.firebase), AngularFireDatabaseModule, AngularFireStorageModule
+    ],
+    providers: [
+        StatusBar,
+        SplashScreen,
+        FirebaseService,
+        Geolocation,
+        GoogleMaps,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
