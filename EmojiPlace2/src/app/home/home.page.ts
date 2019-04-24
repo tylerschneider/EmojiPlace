@@ -87,7 +87,9 @@ export class HomePage implements OnInit {
             //add a marker at center (user's location) on load
             this.markerClick(this.map, latLng);
 
-        });
+			}).catch((error) => {
+				console.log('Error getting location', error);
+			});
 
         //add markers for each item in the database (?)
        /* this.firebaseService.getLocationsList().valueChanges().subscribe(res => {
@@ -97,8 +99,6 @@ export class HomePage implements OnInit {
                 this.map.setCenter(this.position);
             }
         });*/
-
-
     }
 
     updateSearchResults() {
@@ -155,7 +155,7 @@ export class HomePage implements OnInit {
             //Use setTimeout to delay move and prevent flicker
             setTimeout(() => {
                 this.placeMarker.setPosition(location);
-            }, 40);
+            }, 100);
 
         }
     }
