@@ -1,10 +1,11 @@
-import { Component, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, NgZone, Renderer2 } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { FirebaseService } from '../services/firebase.service';
 import { Location } from '../models/location.model';
 import 'rxjs-compat/add/operator/map';
 import { Observable } from 'rxjs-compat/Observable';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 declare var google;
 
@@ -14,7 +15,7 @@ declare var google;
     styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-    //find the map element on the home page
+    //find the element on the home page
     @ViewChild('map') mapElement: ElementRef;
 
     //get locations from the database
@@ -28,6 +29,7 @@ export class HomePage implements OnInit {
     markerPlaced: boolean;
     placeMarker: any;
     latLng: any;
+	emojiSelected: string;
 
     GoogleAutocomplete: any;
     autocomplete: string;
@@ -43,8 +45,16 @@ export class HomePage implements OnInit {
         longitude: 0
     }
 
+	emojis: any = [
+	"smile",
+	"neutral",
+	"disappointed",
+	"heart"
+	]
+
+
     constructor(private router: Router, private geolocation: Geolocation,
-        public firebaseService: FirebaseService, public zone: NgZone) {
+        public firebaseService: FirebaseService, public zone: NgZone, public alertCtrl: AlertController, private renderer: Renderer2) {
         this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
             return changes.map(c => ({
                 key: c.payload.key, ...c.payload.val()
@@ -90,6 +100,8 @@ export class HomePage implements OnInit {
 			}).catch((error) => {
 				console.log('Error getting location', error);
 			});
+
+			
 
         //add markers for each item in the database (?)
        /* this.firebaseService.getLocationsList().valueChanges().subscribe(res => {
@@ -218,12 +230,110 @@ export class HomePage implements OnInit {
         });
     }*/
 
+	moreButton() {
+	
+	}
+
+	smileButton() {
+		if(this.emojiSelected != "smile")
+		{
+			this.emojiSelected = "smile";
+			this.changeOpacity();		
+		}
+		else
+		{
+			this.emojiSelected = null;
+			this.changeOpacity();
+		}
+	}
+	
+	neutralButton() {
+		if(this.emojiSelected != "neutral")
+		{
+			this.emojiSelected = "neutral";
+			this.changeOpacity();		
+		}
+		else
+		{
+			this.emojiSelected = null;
+			this.changeOpacity();
+		}
+	}
+	
+	disappointedButton() {
+		if(this.emojiSelected != "disappointed")
+		{
+			this.emojiSelected = "disappointed";
+			this.changeOpacity();		
+		}
+		else
+		{
+			this.emojiSelected = null;
+			this.changeOpacity();
+		}
+	}
+	
+	heartButton() {
+		if(this.emojiSelected != "heart")
+		{
+			this.emojiSelected = "heart";
+			this.changeOpacity();		
+		}
+		else
+		{
+			this.emojiSelected = null;
+			this.changeOpacity();
+		}
+	}
+
+	changeOpacity() {
+		if(this.emojiSelected == null)
+		{
+			this.emojis.forEach(e => {
+				document.getElementById(e).style.opacity = '1';			
+			});
+		}
+		else 
+		{
+			this.emojis.forEach(e => {
+				if( e != this.emojiSelected)
+				{
+					document.getElementById(e).style.opacity = '0.5';				
+				}
+				else
+				{
+					document.getElementById(e).style.opacity = '1';		
+				}
+
+			});
+		}
+	}
+
     addEmoji() {
+	console.log(this.emojiSelected);
+		if (this.emojiSelected == null)
+		{
+			this.showAlert();
 
-        this.location.emoji = 'emojiname',
-        this.location.latitude = this.placeMarker.getPosition().lat();
-        this.location.longitude = this.placeMarker.getPosition().lng();
+		}
+		else
+		{
+			this.location.emoji = this.emojiSelected,
+			this.location.latitude = this.placeMarker.getPosition().lat();
+			this.location.longitude = this.placeMarker.getPosition().lng();
 
-        this.firebaseService.addLocation(this.location);
+			this.firebaseService.addLocation(this.location);	
+			console.log(this.emojiSelected);
+		}
     }
+
+	async showAlert(){
+		let alertPopup = await this.alertCtrl.create({
+				header: 'Alert',
+				message: 'Please Select An Emoji',
+				buttons: ['OK']
+			});
+
+			return await alertPopup.present();
+	}
 }

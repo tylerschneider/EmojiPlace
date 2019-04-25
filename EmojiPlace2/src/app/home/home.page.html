@@ -1,8 +1,8 @@
 
 <ion-header>
     <ion-toolbar>
-        <ion-title>
-            Map
+        <ion-title id="title">
+            EMOJI PLACE
         </ion-title>
     </ion-toolbar>
 </ion-header>
@@ -19,11 +19,20 @@
     </ion-list>
 
     <div #map id="map"></div>
+ 
+	 <ion-list id="iconButtons">
+		<ion-img class="icon-button" id="smile" (click)="smileButton()" src="https://twemoji.maxcdn.com/2/svg/1f603.svg"></ion-img>
 
+		<ion-img class="icon-button" id="neutral" (click)="neutralButton()" src="https://twemoji.maxcdn.com/2/svg/1f610.svg"></ion-img>
 
-    <ion-img (click)="plusButton()" style="width: 74px; height: 74px; background: transparent !important;" src="assets/plusButton.png"></ion-img>
+		<ion-img class="icon-button" id="disappointed" (click)="disappointedButton()" src="https://twemoji.maxcdn.com/2/svg/1f61e.svg"></ion-img>
 
-    <ion-button size="large" (click)="addEmoji()" routerLink="../home" routerDirection="forward">Add Emoji</ion-button>
+		<ion-img class="icon-button" id="heart" (click)="heartButton()" src="https://twemoji.maxcdn.com/2/svg/2764.svg"></ion-img>
+
+		<ion-button id="moreButton" (click)="moreButton()" color="primary">&#8226;&#8226;&#8226;</ion-button>
+		</ion-list>
+
+    <ion-button id="addButton" size="large" (click)="addEmoji()" routerLink="../home" routerDirection="forward">Add Emoji</ion-button>
 
      <!--<ion-list>
 
