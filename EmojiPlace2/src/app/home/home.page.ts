@@ -1,11 +1,11 @@
-import { Component, ViewChild, ElementRef, OnInit, NgZone, Renderer2 } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { FirebaseService } from '../services/firebase.service';
 import { Location } from '../models/location.model';
 import 'rxjs-compat/add/operator/map';
 import { Observable } from 'rxjs-compat/Observable';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AlertController, NavController } from '@ionic/angular';
 
 declare var google;
 
@@ -29,14 +29,14 @@ export class HomePage implements OnInit {
     markerPlaced: boolean;
     placeMarker: any;
     latLng: any;
+	leftPage: boolean = false;
+
 	emojiSelected: string;
 
     GoogleAutocomplete: any;
     autocomplete: string;
     autocompleteItems: any = [];
     geocoder: any;
-
-    public locationTitle: string;
 
     //what information is held in Location
     location: Location = {
@@ -54,7 +54,7 @@ export class HomePage implements OnInit {
 
 
     constructor(private router: Router, private geolocation: Geolocation,
-        public firebaseService: FirebaseService, public zone: NgZone, public alertCtrl: AlertController, private renderer: Renderer2) {
+        public firebaseService: FirebaseService, public zone: NgZone, public alertCtrl: AlertController, public activatedRoute: ActivatedRoute) {
         this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
             return changes.map(c => ({
                 key: c.payload.key, ...c.payload.val()
@@ -62,7 +62,7 @@ export class HomePage implements OnInit {
         });
     }
 
-    ngOnInit() {
+	ngOnInit() {
         this.geolocation.getCurrentPosition().then(pos => {
 
             //find the user's position
@@ -101,8 +101,6 @@ export class HomePage implements OnInit {
 				console.log('Error getting location', error);
 			});
 
-			
-
         //add markers for each item in the database (?)
        /* this.firebaseService.getLocationsList().valueChanges().subscribe(res => {
             for (let item of res) {
@@ -112,6 +110,18 @@ export class HomePage implements OnInit {
             }
         });*/
     }
+
+	ionViewDidEnter(){
+
+		var em = this.activatedRoute.snapshot.paramMap.get('id');
+		 
+		if(em != null)
+		{
+			this.emojiSelected = em;
+			console.log(this.emojiSelected + " 123");
+			this.changeOpacity();
+		}		
+	}
 
     updateSearchResults() {
         //check if the search input is empty
@@ -231,7 +241,9 @@ export class HomePage implements OnInit {
     }*/
 
 	moreButton() {
-	
+		this.emojiSelected = null;
+		this.changeOpacity();
+		this.leftPage = true;
 	}
 
 	smileButton() {
@@ -290,7 +302,7 @@ export class HomePage implements OnInit {
 		if(this.emojiSelected == null)
 		{
 			this.emojis.forEach(e => {
-				document.getElementById(e).style.opacity = '1';			
+				document.getElementById(e).style.opacity = '1';
 			});
 		}
 		else 
@@ -298,13 +310,13 @@ export class HomePage implements OnInit {
 			this.emojis.forEach(e => {
 				if( e != this.emojiSelected)
 				{
-					document.getElementById(e).style.opacity = '0.5';				
+					document.getElementById(e).style.opacity = '0.5';
+					console.log("here");
 				}
 				else
 				{
 					document.getElementById(e).style.opacity = '1';		
 				}
-
 			});
 		}
 	}

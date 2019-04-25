@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+	<ion-buttons slot="start">
+		<ion-back-button defaultHref="../home" (click)="selectEmoji()" routerDirection="forward"></ion-back-button>
+	</ion-buttons>
+    <ion-title slot="end">MORE EMOJI</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list class="iconRow">
+
+		<ion-img class="icon-button" id="smile2" (click)="smileButton()" src="https://twemoji.maxcdn.com/2/svg/1f603.svg"></ion-img>
+
+		<ion-img class="icon-button" id="neutral2" (click)="neutralButton()" src="https://twemoji.maxcdn.com/2/svg/1f610.svg"></ion-img>
+
+		<ion-img class="icon-button" id="disappointed2" (click)="disappointedButton()" src="https://twemoji.maxcdn.com/2/svg/1f61e.svg"></ion-img>
+
+		<ion-img class="icon-button" id="rage" (click)="rageButton()" src="https://twemoji.maxcdn.com/2/svg/1f621.svg"></ion-img>
+
+		<ion-img class="icon-button" id="heart2" (click)="heartButton()" src="https://twemoji.maxcdn.com/2/svg/2764.svg"></ion-img>
+
+	</ion-list>
+
+
+</ion-content>
+
+	    <ion-footer>
+			<ion-toolbar>
+				<ion-button id="selectButton" size="large" (click)="selectEmoji()" routerDirection="forward">Select Emoji</ion-button>
+			</ion-toolbar>
+		</ion-footer>
