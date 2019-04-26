@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-more',
@@ -9,84 +10,64 @@ import { Router } from '@angular/router';
 export class MorePage implements OnInit {
 
   moreEmojis: any = [
-  	"smile2",
-	"neutral2",
-	"disappointed2",
+  	"smiley",
+	"neutral",
+	"disappointed",
 	"rage",
-	"heart2"
+	"heart"
   ]
 
   emojiSelected: string;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private modalController: ModalController) { }
 
   ngOnInit() {
   }
 
-	smileButton() {
-		if(this.emojiSelected != "smile2")
-		{
-			this.emojiSelected = "smile2";
-			this.changeOpacity();		
-		}
-		else
-		{
+	smileyButton() {
+		if(this.emojiSelected != "smiley"){
+			this.emojiSelected = "smiley";		
+		}else{
 			this.emojiSelected = null;
-			this.changeOpacity();
-		}
+        }
+        this.changeOpacity();
 	}
 	
 	neutralButton() {
-		if(this.emojiSelected != "neutral2")
-		{
-			this.emojiSelected = "neutral2";
-			this.changeOpacity();
-		}
-		else
-		{
-			this.emojiSelected = null;
-			this.changeOpacity();
-		}
-	}
+        if (this.emojiSelected != "neutral") {
+            this.emojiSelected = "neutral";
+        } else {
+            this.emojiSelected = null;
+        }
+        this.changeOpacity();
+    }
 	
 	disappointedButton() {
-		if(this.emojiSelected != "disappointed2")
-		{
-			this.emojiSelected = "disappointed2";
-			this.changeOpacity();		
-		}
-		else
-		{
-			this.emojiSelected = null;
-			this.changeOpacity();
-		}
-	}	
+        if (this.emojiSelected != "disappointed") {
+            this.emojiSelected = "disappointed";
+        } else {
+            this.emojiSelected = null;
+        }
+        this.changeOpacity();
+    }	
 	
 	rageButton() {
-		if(this.emojiSelected != "rage")
-		{
-			this.emojiSelected = "rage";
-			this.changeOpacity();		
-		}
-		else
-		{
-			this.emojiSelected = null;
-			this.changeOpacity();
-		}
-	}
+        if (this.emojiSelected != "rage") {
+            this.emojiSelected = "rage";
+        } else {
+            this.emojiSelected = null;
+        }
+        this.changeOpacity();
+    }
 	
 	heartButton() {
-		if(this.emojiSelected != "heart2")
-		{
-			this.emojiSelected = "heart2";
-			this.changeOpacity();		
-		}
-		else
-		{
-			this.emojiSelected = null;
-			this.changeOpacity();
-		}
-	}
+        if (this.emojiSelected != "heart") {
+            this.emojiSelected = "heart";
+        } else {
+            this.emojiSelected = null;
+        }
+        this.changeOpacity();
+    }
 
 	changeOpacity() {
 		if(this.emojiSelected == null)
@@ -112,29 +93,6 @@ export class MorePage implements OnInit {
 	}
 
 	selectEmoji(){
-		if(this.emojiSelected != null){
-			if(this.emojiSelected == "smile2")
-			{
-				this.emojiSelected = "smile";
-			}
-			if(this.emojiSelected == "neutral2")
-			{
-				this.emojiSelected = "neutral";
-			}			
-			if(this.emojiSelected == "disappointed2")
-			{
-				this.emojiSelected = "disappointed";
-			}			
-			if(this.emojiSelected == "heart2")
-			{
-				this.emojiSelected = "heart";
-			}
-			this.router.navigate(['../home', { id: this.emojiSelected }]);		
-		}
-		else
-		{
-			this.router.navigate(['../home']);
-		}
-
+        this.modalController.dismiss(this.emojiSelected);
 	}
 }

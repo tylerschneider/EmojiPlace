@@ -5,7 +5,8 @@ import { Location } from '../models/location.model';
 import 'rxjs-compat/add/operator/map';
 import { Observable } from 'rxjs-compat/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, ModalController, ToastController } from '@ionic/angular';
+import { MorePage } from '../pages/more/more.page';
 
 declare var google;
 
@@ -23,10 +24,10 @@ export class HomePage implements OnInit {
 
     //variables
     map: any;
+    camera: any;
     position: any;
     locationKey: any;
     currentLoc: any;
-    markerPlaced: boolean;
     placeMarker: any;
     latLng: any;
 	leftPage: boolean = false;
@@ -46,7 +47,7 @@ export class HomePage implements OnInit {
     }
 
 	emojis: any = [
-	"smile",
+	"smiley",
 	"neutral",
 	"disappointed",
 	"heart"
@@ -54,7 +55,7 @@ export class HomePage implements OnInit {
 
 
     constructor(private router: Router, private geolocation: Geolocation,
-        public firebaseService: FirebaseService, public zone: NgZone, public alertCtrl: AlertController, public activatedRoute: ActivatedRoute) {
+        public firebaseService: FirebaseService, private zone: NgZone, private alertCtrl: AlertController, private activatedRoute: ActivatedRoute, private modalController: ModalController, private toastCtrl: ToastController) {
         this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
             return changes.map(c => ({
                 key: c.payload.key, ...c.payload.val()
@@ -109,9 +110,19 @@ export class HomePage implements OnInit {
                 this.map.setCenter(this.position);
             }
         });*/
+
+        var items = 0
+
+        this.firebaseService.getLocationsList().valueChanges().subscribe(res => {
+            for (let item of res) {
+                //change number for speed emojis are added
+                setTimeout(() => { this.placeEmoji(item.emoji, item.latitude, item.longitude); }, 75 * items);
+                items++
+            }
+        });
     }
 
-	ionViewDidEnter(){
+	/*ionViewDidEnter(){
 
 		var em = this.activatedRoute.snapshot.paramMap.get('id');
 		 
@@ -121,7 +132,7 @@ export class HomePage implements OnInit {
 			console.log(this.emojiSelected + " 123");
 			this.changeOpacity();
 		}		
-	}
+	}*/
 
     updateSearchResults() {
         //check if the search input is empty
@@ -159,14 +170,13 @@ export class HomePage implements OnInit {
 
     markerClick(map, location) {
         //make sure there's already a marker placed. If not, it will make a new one
-        if (!this.markerPlaced) {
+        if (this.placeMarker == null) {
             this.placeMarker = new google.maps.Marker({
             position: location,
             map: map,
             animation: google.maps.Animation.DROP,
             draggable: true
             });
-            this.markerPlaced = true
         }
         else {
             //reset the marker by removing and re-adding it so that it's drop animation will replay
@@ -178,11 +188,10 @@ export class HomePage implements OnInit {
             setTimeout(() => {
                 this.placeMarker.setPosition(location);
             }, 100);
-
         }
     }
 
-    addMarker(location: any) {
+    /*addMarker(location: any) {
         let latLng = new google.maps.LatLng(location.latitude, location.longitude);
         let marker = new google.maps.Marker({
             map: this.map,
@@ -192,7 +201,7 @@ export class HomePage implements OnInit {
 
        // this.addInfoWindow(marker, location);
     }
-    /*
+    
     onContextChange(ctxt: string): void {
         this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
             return changes.map(c => ({
@@ -243,13 +252,14 @@ export class HomePage implements OnInit {
 	moreButton() {
 		this.emojiSelected = null;
 		this.changeOpacity();
-		this.leftPage = true;
+        this.leftPage = true;
+        this.showModal();
 	}
 
-	smileButton() {
-		if(this.emojiSelected != "smile")
+	smileyButton() {
+		if(this.emojiSelected != "smiley")
 		{
-			this.emojiSelected = "smile";
+			this.emojiSelected = "smiley";
 			this.changeOpacity();		
 		}
 		else
@@ -322,12 +332,13 @@ export class HomePage implements OnInit {
 	}
 
     addEmoji() {
-	console.log(this.emojiSelected);
 		if (this.emojiSelected == null)
 		{
-			this.showAlert();
-
-		}
+			this.showAlert(0);
+        }
+        else if (this.placeMarker == null) {
+            this.showAlert(1);
+        }
 		else
 		{
 			this.location.emoji = this.emojiSelected,
@@ -335,17 +346,114 @@ export class HomePage implements OnInit {
 			this.location.longitude = this.placeMarker.getPosition().lng();
 
 			this.firebaseService.addLocation(this.location);	
-			console.log(this.emojiSelected);
+            console.log(this.emojiSelected);
+
+            this.placeEmoji(this.location.emoji, this.location.latitude, this.location.longitude);
+
+            this.emojiSelected = null;
+            this.placeMarker.setMap(null);
+            this.placeMarker.setAnimation(null);
+            this.placeMarker = null;
+            this.changeOpacity();
+
+            this.showToast();
 		}
     }
 
-	async showAlert(){
-		let alertPopup = await this.alertCtrl.create({
+    placeEmoji(e, lat, lng) {
+
+        var p = 'https://twemoji.maxcdn.com/2/svg/'
+        var s = '.svg'
+        var icon
+
+        if (e == "smiley")
+        {
+            icon = p + '1f603' + s
+        }
+        if (e == "neutral") {
+            icon = p + '1f610' + s
+        }
+        if (e == "disappointed") {
+            icon = p + '1f61e' + s
+        }
+        if (e == "heart") {
+            icon = p + '2764' + s
+        }
+        if (e == "rage") {
+            icon = p + '1f621' + s
+        }
+
+        var pos = new google.maps.LatLng(lat, lng);
+
+        var shape = {
+            coords: [0],
+            type: 'poly'
+        };
+
+        var marker = new google.maps.Marker({
+            position: pos,
+            icon: { url: icon, scaledSize: new google.maps.Size(30, 30) },
+            map: this.map,
+            shape: shape,
+            //animation: google.maps.Animation.DROP
+        });
+
+        marker.setOpacity(0);
+
+        this.markerFade(marker, 0);
+    }
+
+    markerFade(m, o) {
+        if (o < 1) {
+           //opacity added each iteration
+           o += 0.2;
+           m.setOpacity(o);
+           //speed of iterations
+           setTimeout(() => {
+               this.markerFade(m, o);
+           }, 50);
+        }
+    }
+
+    async showToast() {
+        let toast = await this.toastCtrl.create({
+            message: 'Emoji added!',
+            duration: 2000,
+            showCloseButton: true
+        });
+        toast.present();
+    }
+
+    async showAlert(type) {
+        if (type == 0){
+		let alertPopup1 = await this.alertCtrl.create({
 				header: 'Alert',
 				message: 'Please Select An Emoji',
 				buttons: ['OK']
 			});
 
-			return await alertPopup.present();
-	}
+			return await alertPopup1.present();
+        }
+        else{
+            let alertPopup2 = await this.alertCtrl.create({
+                header: 'Alert',
+                message: 'Please Select A Location',
+                buttons: ['OK']
+            });
+
+            return await alertPopup2.present();
+        }
+
+    }
+
+    async showModal() {
+        let modal = await this.modalController.create({
+            component: MorePage,
+        });
+        modal.onDidDismiss().then(data => {
+            this.emojiSelected = data['data'];
+            console.log(data, this.emojiSelected);
+        });
+        return await modal.present();
+    }
 }
