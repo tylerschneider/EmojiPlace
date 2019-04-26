@@ -5,7 +5,7 @@ import { Location } from '../models/location.model';
 import 'rxjs-compat/add/operator/map';
 import { Observable } from 'rxjs-compat/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlertController, NavController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, NavController, ModalController, ToastController, LoadingController } from '@ionic/angular';
 import { MorePage } from '../pages/more/more.page';
 
 declare var google;
@@ -29,8 +29,10 @@ export class HomePage implements OnInit {
     locationKey: any;
     currentLoc: any;
     placeMarker: any;
-    latLng: any;
-	leftPage: boolean = false;
+    userPos: any;
+    leftPage: boolean = false;
+    loading: any;
+    mapIsLoaded: boolean = false;
 
 	emojiSelected: string;
 
@@ -55,7 +57,7 @@ export class HomePage implements OnInit {
 
 
     constructor(private router: Router, private geolocation: Geolocation,
-        public firebaseService: FirebaseService, private zone: NgZone, private alertCtrl: AlertController, private activatedRoute: ActivatedRoute, private modalController: ModalController, private toastCtrl: ToastController) {
+        public firebaseService: FirebaseService, private zone: NgZone, private alertCtrl: AlertController, private activatedRoute: ActivatedRoute, private modalController: ModalController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
         this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
             return changes.map(c => ({
                 key: c.payload.key, ...c.payload.val()
@@ -63,11 +65,14 @@ export class HomePage implements OnInit {
         });
     }
 
-	ngOnInit() {
+    ngOnInit() {
+
+        this.showLoading();
+
         this.geolocation.getCurrentPosition().then(pos => {
 
             //find the user's position
-            let latLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+            let userPos = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 
             let mapOptions = {
                 zoom: 15,
@@ -78,11 +83,8 @@ export class HomePage implements OnInit {
                 clickableIcons: false,
 
                 //set map center to user's position
-                center: latLng
+                center: userPos
             }
-
-            //create map
-            this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
             //create the autocomplete service, input, and array for predictions 
             this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
@@ -90,26 +92,55 @@ export class HomePage implements OnInit {
             this.autocompleteItems = [];
             this.geocoder = new google.maps.Geocoder;
 
-            //add event listener to the map to look for taps/clicks, which will place a marker
-            google.maps.event.addListener(this.map, 'click', (event) => {
-                this.markerClick(this.map, event.latLng);
+            //create map
+            this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+            google.maps.event.addListenerOnce(this.map, 'idle', (event) => {
+                this.mapLoaded(userPos);
             });
-
-            //add a marker at center (user's location) on load
-            this.markerClick(this.map, latLng);
-
-			}).catch((error) => {
-				console.log('Error getting location', error);
-			});
-
-        //add markers for each item in the database (?)
-       /* this.firebaseService.getLocationsList().valueChanges().subscribe(res => {
-            for (let item of res) {
-                this.addMarker(item);
-                this.position = new google.maps.LatLng(item.latitude, item.longitude);
-                this.map.setCenter(this.position);
+        }).catch((error) => {
+            //find the user's position
+            let mapOptions = {
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false,
+                clickableIcons: false,
             }
-        });*/
+
+            //create the autocomplete service, input, and array for predictions 
+            this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+            this.autocomplete = '';
+            this.autocompleteItems = [];
+            this.geocoder = new google.maps.Geocoder;
+
+            //create map
+            this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+            google.maps.event.addListenerOnce(this.map, 'idle', () => {
+                var pos = new google.maps.LatLng(43.6, -116.2);
+                this.mapLoaded(pos);
+                this.map.setCenter(pos);
+            });
+        });
+    }
+
+    mapLoaded(pos) {
+        //console.log(this.loading);
+        if (this.loading != null)
+        {
+          this.loading.dismiss();
+        }
+
+
+        //add event listener to the map to look for taps/clicks, which will place a marker
+        google.maps.event.addListener(this.map, 'click', (event) => {
+            this.markerClick(this.map, event.latLng);
+        });
+
+        //add a marker at center (user's location) on load
+        this.markerClick(this.map, pos);
 
         var items = 0
 
@@ -121,18 +152,6 @@ export class HomePage implements OnInit {
             }
         });
     }
-
-	/*ionViewDidEnter(){
-
-		var em = this.activatedRoute.snapshot.paramMap.get('id');
-		 
-		if(em != null)
-		{
-			this.emojiSelected = em;
-			console.log(this.emojiSelected + " 123");
-			this.changeOpacity();
-		}		
-	}*/
 
     updateSearchResults() {
         //check if the search input is empty
@@ -158,9 +177,6 @@ export class HomePage implements OnInit {
         this.autocompleteItems = [];
 
         this.geocoder.geocode({ 'placeId': item.place_id }, (results, status) => {
-            /*if (status === 'OK' && results[0]) {
-                var resultPos = new google.maps.LatLng(results[0].geometry.location.lat, results[0].geometry.location.lng);
-            }*/
 
             this.map.setCenter(results[0].geometry.location);
             this.markerClick(this.map, results[0].geometry.location);
@@ -169,6 +185,7 @@ export class HomePage implements OnInit {
     
 
     markerClick(map, location) {
+
         //make sure there's already a marker placed. If not, it will make a new one
         if (this.placeMarker == null) {
             this.placeMarker = new google.maps.Marker({
@@ -177,6 +194,7 @@ export class HomePage implements OnInit {
             animation: google.maps.Animation.DROP,
             draggable: true
             });
+            console.log(location);
         }
         else {
             //reset the marker by removing and re-adding it so that it's drop animation will replay
@@ -190,64 +208,6 @@ export class HomePage implements OnInit {
             }, 100);
         }
     }
-
-    /*addMarker(location: any) {
-        let latLng = new google.maps.LatLng(location.latitude, location.longitude);
-        let marker = new google.maps.Marker({
-            map: this.map,
-            animation: google.maps.Animation.DROP,
-            position: latLng
-        });
-
-       // this.addInfoWindow(marker, location);
-    }
-    
-    onContextChange(ctxt: string): void {
-        this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
-            return changes.map(c => ({
-                key: c.payload.key, ...c.payload.val()
-            }));
-        });
-    }*/
-
-    /*assignLocation(loc: Location) {
-        this.firebaseService.setCurrentLocation(loc);
-        this.currentLoc = loc;
-        this.locationKey = loc.key;
-        this.locationTitle = loc.title;
-        console.log("Assigned location key: " + this.locationKey);
-    }*/
-
-    /*addInfoWindow(marker, location) {
-        let contentString = '<div class="info-window" id="clickableItem" >' +
-            '<h3>' + location.title + '</h3>' +
-            '<div class="info-content">' +
-            '<img src="' + location.picture + '" style="width:30px;height:30px;border-radius: 50%; padding: 20px, 20px, 20px, 20px;"/>' +
-            '<p>' + location.content + '</p>' +
-            '</div>' +
-            '</div>';
-
-        let infoWindow = new google.maps.InfoWindow({
-            content: contentString,
-            maxWidth: 400
-        });
-
-        google.maps.event.addListener(infoWindow, 'domready', () => {
-            var clickableItem = document.getElementById('clickableItem');
-            clickableItem.addEventListener('click', () => {
-                console.log("clicked on marker");
-                this.firebaseService.setCurrentLocation(location);
-                this.locationTitle = location.title;
-                this.router.navigate(['/list', this.locationTitle]);
-            });
-        });
-        google.maps.event.addListener(marker, 'click', () => {
-            infoWindow.open(this.map, marker);
-        });
-        google.maps.event.addListener(this.map, 'click', () => {
-            infoWindow.close(this.map, marker);
-        });
-    }*/
 
 	moreButton() {
 		this.emojiSelected = null;
@@ -455,5 +415,16 @@ export class HomePage implements OnInit {
             console.log(data, this.emojiSelected);
         });
         return await modal.present();
+    }
+
+    async showLoading() {
+
+            this.loading = await this.loadingCtrl.create({
+                message: 'Loading Map...',
+                spinner: 'crescent',
+                duration: 15000
+            });
+            console.log(this.loading);
+            return await this.loading.present();
     }
 }
