@@ -4,6 +4,13 @@
 	font-weight: bold;
 }
 
+//This controls the location of the "center to your location" fab button
+#mapcontainer {
+    position: absolute;
+    width: 102%;
+    height: 65%;
+}
+
 #map {
     width: 100%;
     height: 50%;
