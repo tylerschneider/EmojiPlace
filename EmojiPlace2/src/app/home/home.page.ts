@@ -51,10 +51,10 @@ export class HomePage implements OnInit {
 
     //emojis that can be selected on this page
 	emojis: any = [
-	"smiley",
-	"neutral",
-	"disappointed",
-	"heart"
+	    "smile",
+	    "neutral",
+	    "frown",
+        "heart"
 	]
 
     //constructors
@@ -88,7 +88,7 @@ export class HomePage implements OnInit {
         }).catch((error) => {
 
             //if no location found, set to the default location
-            this.userPos = new google.maps.LatLng(43.6, -116.2);
+            this.userPos = new google.maps.LatLng(43.6038, - 116.2032);
             //show error message
             this.showToast(0);
 
@@ -192,7 +192,6 @@ export class HomePage implements OnInit {
 
         //create subscriber to look for changes in the user's position
         this.geolocation.watchPosition(this.options).subscribe((data) => {
-            console.log("watching");
             var loc = new google.maps.LatLng(data.coords.latitude, data.coords.longitude)
                 //if the user moves, move the user marker to that location
                 this.userMarker1.setPosition(loc);
@@ -296,9 +295,9 @@ export class HomePage implements OnInit {
 
     // =-=-=-=-=-=-=-=-=-=-=-=-=<| Buttons for emojis |>=-=-=-=-=-=-=-=-=-=-=-=-= \\
 
-	smileyButton() {
-		if (this.emojiSelected != "smiley") {
-            this.emojiSelected = "smiley";
+	smileButton() {
+		if (this.emojiSelected != "smile") {
+            this.emojiSelected = "smile";
         }
         else {
             this.emojiSelected = null;
@@ -316,9 +315,9 @@ export class HomePage implements OnInit {
         this.changeOpacity();
     }
 	
-    disappointedButton() {
-        if (this.emojiSelected != "disappointed") {
-            this.emojiSelected = "disappointed";
+    frownButton() {
+        if (this.emojiSelected != "frown") {
+            this.emojiSelected = "frown";
         }
         else {
             this.emojiSelected = null;
@@ -421,6 +420,141 @@ export class HomePage implements OnInit {
         }
         if (e == "rage") {
             icon = p + '1f621' + s
+        }
+        if (e == "burger") {
+            icon = p + '1f354' + s
+        }
+        if (e == "basketball") {
+            icon = p + '1f3c0' + s
+        }
+        if (e == "camera") {
+            icon = p + '1f3a5' + s
+        }
+        if (e == "music") {
+            icon = p + '1f3b5' + s
+        }
+        if (e == "tree") {
+            icon = p + '1f332' + s
+        }
+        if (e == "taco") {
+            icon = p + '1f32e' + s
+        }
+        if (e == "pizza") {
+            icon = p + '1f355' + s
+        }
+        if (e == "eggplant") {
+            icon = p + '1f346' + s
+        }
+        if (e == "chicken") {
+            icon = p + '1f357' + s
+        }
+        if (e == "ramen") {
+            icon = p + '1f35c' + s
+        }
+        if (e == "icecream") {
+            icon = p + '1f366' + s
+        }
+        if (e == "cutlery") {
+            icon = p + '1f374' + s
+        }
+        if (e == "egg") {
+            icon = p + '1f373' + s
+        }
+        if (e == "beer") {
+            icon = p + '1f37a' + s
+        }
+        if (e == "graduation") {
+            icon = p + '1f393' + s
+        }
+        if (e == "controller") {
+            icon = p + '1f3ae' + s
+        }
+        if (e == "football") {
+            icon = p + '1f3c8' + s
+        }
+        if (e == "atm") {
+            icon = p + '1f3e7' + s
+        }
+        if (e == "tiger") {
+            icon = p + '1f42f' + s
+        }
+        if (e == "fish") {
+            icon = p + '1f41f' + s
+        }
+        if (e == "dog") {
+            icon = p + '1f415' + s
+        }
+        if (e == "thumbsup") {
+            icon = p + '1f44d' + s
+        }
+        if (e == "thumbsdown") {
+            icon = p + '1f44e' + s
+        }
+        if (e == "highheel") {
+            icon = p + '1f460' + s
+        }
+        if (e == "skull") {
+            icon = p + '1f480' + s
+        }
+        if (e == "barber") {
+            icon = p + '1f488' + s
+        }
+        if (e == "poop") {
+            icon = p + '1f4a9' + s
+        }
+        if (e == "grin") {
+            icon = p + '1f601' + s
+        }
+        if (e == "laughingwhilecrying") {
+            icon = p + '1f602' + s
+        }
+        if (e == "sunglasses") {
+            icon = p + '1f60e' + s
+        }
+        if (e == "meh") {
+            icon = p + '1f615' + s
+        }
+        if (e == "winktongue") {
+            icon = p + '1f61c' + s
+        }
+        if (e == "angry") {
+            icon = p + '1f620' + s
+        }
+        if (e == "tear") {
+            icon = p + '1f622' + s
+        }
+        if (e == "sad") {
+            icon = p + '1f626' + s
+        }
+        if (e == "surprised") {
+            icon = p + '1f62e' + s
+        }
+        if (e == "grimace") {
+            icon = p + '1f62c' + s
+        }
+        if (e == "crying") {
+            icon = p + '1f62d' + s
+        }
+        if (e == "smile") {
+            icon = p + '1f642' + s
+        }
+        if (e == "frown") {
+            icon = p + '1f641' + s
+        }
+        if (e == "no") {
+            icon = p + '1f6ab' + s
+        }
+        if (e == "shoppingcart") {
+            icon = p + '1f6d2' + s
+        }
+        if (e == "thinking") {
+            icon = p + '1f914' + s
+        }
+        if (e == "star") {
+            icon = p + '2b50' + s
+        }
+        if (e == "raisedeyebrow") {
+            icon = p + '1f928' + s
         }
 
         // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= \\
