@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Emoji Place</title>
+    <!-- Bootstrap -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<link href="../maps.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+	  
+  	<div class="row justify-content-center">
+         <div class="col-8">
+              <form class="card card-sm">
+                       <div class="card-body row no-gutters align-items-center">
+                            <div class="col-auto mt-2">
+                                  <i class="fas fa-search h4 text-body"></i>
+                            </div>
+                            <div class="col ml-3">
+                                  <input id="search" class="form-control form-control-lg form-control-borderless" type="text" autocomplete="off" placeholder="Search Places">
+                            </div><!--
+                            <div class="col-auto">
+                                  <button id="search-button" class="btn btn-lg btn-primary" type="submit">Search</button>
+                            </div>-->
+                       </div>
+                </form>
+          </div>
+    </div>
+	   	  
+	<div id="map"></div>
+	  
+
+	<div id="infowindow-content" >
+      <span id="place-name"  class="title"></span><br>
+      <span id="place-address"></span>
+    </div>
+
+	
+	<div id="info" class="row justify-content-center">	
+			<div id="location-title" class="font-weight-bold col-4 text-right h3 align-self-end">Select A Location</div>
+			<p id="location-seperator" class="gray h4 d-none d-md-block"></p>
+			<div id="location-address" class="d-none d-md-block col-6 h4 text-muted align-self-center"></div>
+	</div>
+	  
+	  <hr id="seperator">
+	  
+	<div id="emojis">
+		<div class="row justify-content-center p-3">
+			<div id="emoji0" class="col-1 text-right"></div> <div id="number0" class="col-1 h2"></div>
+			<div id="emoji1" class="col-1 text-right"></div> <div id="number1" class="col-1 h2"></div>
+			<div id="emoji2" class="col-1 text-right"></div> <div id="number2" class="col-1 h2"></div>
+		</div>
+		<div class="row justify-content-center p-3">
+			<div id="emoji3" class="col-1 text-right"></div> <div id="number3" class="col-1 h2"></div>
+			<div id="emoji4" class="col-1 text-right"></div> <div id="number4" class="col-1 h2"></div>
+			<div id="emoji5" class="col-1 text-right"></div> <div id="number5" class="col-1 h2"></div>
+		</div>
+		<div class="row justify-content-center p-3">
+			<div id="emoji6" class="col-1 text-right"></div> <div id="number6" class="col-1 h2"></div>
+		</div>
+	</div>
+
+	<script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCmVuL1h4IZ883yYHdLSJz7xBDhz3ba3Jw",
+		authDomain: "emoji-place-238404.firebaseapp.com",
+		databaseURL: "https://emoji-place-238404.firebaseio.com",
+		projectId: "emoji-place-238404",
+		storageBucket: "emoji-place-238404.appspot.com",
+		messagingSenderId: "438569932296"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	  <script src="../firebaseController.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	  <script src="../maps.js"></script>
+	  	  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiaChOrczRWEzVoIAi_bU-EP7Wpvr-9oc&libraries=places&callback=initMap" async defer></script>
+  </body>
+</html>
