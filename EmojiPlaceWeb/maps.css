@@ -17,8 +17,9 @@ html, body{
 }
 #info{
 	margin: auto;
+	font-family: 'Fredoka One', cursive;
 }
-#seperator {
+#separator {
 	width: 70%;
     height: 8px;
     background-image: linear-gradient(90deg, black, transparent);

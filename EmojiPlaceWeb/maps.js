@@ -1,4 +1,4 @@
-var map, placeMarker, infoWindow, locationTitle, locationSeperator, locationAddress;
+var map, placeMarker, infoWindow, locationTitle, locationSeparator, locationAddress;
 var initialPos = {
 	lat: 43.6038,
 	lng: -116.2032
@@ -195,20 +195,20 @@ function updateLocations(){
 function findEmoji(title, address, location){
 	locationTitle = document.getElementById("location-title");
 	locationTitle.innerHTML = title;
-	locationSeperator = document.getElementById("location-seperator");
+	locationSeparator = document.getElementById("location-separator");
 	if(title == "This Location")
 	{
-		locationSeperator.innerHTML = "";			
+		locationSeparator.innerHTML = "";			
 	}
 	else
 	{
-		locationSeperator.innerHTML = "|";		
+		locationSeparator.innerHTML = "|";		
 	}
 
 	locationAddress = document.getElementById("location-address");
 	locationAddress.innerHTML = address;
 	
-	for(var ind = 0; ind < 7; ind++)
+	for(var ind = 0; ind < 9; ind++)
 	{
 		document.getElementById("emoji" + ind).innerHTML = "";
 		document.getElementById("number" + ind).innerHTML = "";			
@@ -240,10 +240,10 @@ function findEmoji(title, address, location){
 		document.getElementById("emoji" + j).innerHTML = "<img src=" + getEmojiImage(element).toString() + " alt=" + element + ">" ;
 		document.getElementById("number" + j).innerHTML = counts[element];
 		j++;
-		if(j>6)
-			{
-				break;
-			}
+		if(j>8)
+		{
+			break;
+		}
 	}
 }
 
