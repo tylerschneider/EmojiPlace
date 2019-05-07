@@ -7,7 +7,10 @@ html, body{
 }
 #map {
 	height: 60%;
-	margin: 3% 5%;
+	margin: 1% 5%;
+}
+#searchbar {
+	padding-top: 1%;
 }
 #search-button {
 	border-radius: 0px;
@@ -16,6 +19,7 @@ html, body{
 	font-weight: bold;
 }
 #info{
+	padding-top: 20px;
 	margin: auto;
 	font-family: 'Fredoka One', cursive;
 }
