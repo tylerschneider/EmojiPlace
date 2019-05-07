@@ -43,17 +43,29 @@ nav {
 	padding: 20px;
 	background-image: linear-gradient(90deg, #95dbb8, #94bdff);
 }
-#about-text {
+#about-content {
 	height: 100%;
 	width: 100%;
 	margin: auto;
 	padding: 20px;
 	background-color: white;
+	font-family: 'Baloo Paaji', cursive;
+}
+#about-title {
+	font-family: 'Fredoka One', cursive;
 }
 #logo-title {
 	font-family: 'Modak', cursive;
 	font-size: 20px;
 	color: #F54B4B;
-	text-shadow: -2px 2px rgba(0,0,0,0.5);
 	-webkit-text-stroke: 1px black;
+}
+#button-container {
+	width: 100%;
+}
+#button-format {
+	display: block;
+	margin: auto;
+	width:30%;
+	height:30%;
 }
