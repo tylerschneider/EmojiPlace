@@ -1,0 +1,22 @@
+.iconRow {
+	width: 100%;
+	margin: 0;
+	padding: 5% 3%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.icon-button {
+	width: 17%; 
+	height: 17%; 
+}
+
+#selectButton {
+	display: flex;
+	width: 90%;
+	margin: 5%;
+	justify-content: center;
+	align-items: center;
+
+}

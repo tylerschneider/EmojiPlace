@@ -1,0 +1,44 @@
+
+<ion-header>
+    <ion-toolbar>
+        <ion-title id="title">
+            &nbsp;EMOJI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PLACE
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-toolbar color="primary" id="searchbox">
+        <ion-searchbar [(ngModel)]="autocomplete" (ionChange)="updateSearchResults()" placeholder="Search"></ion-searchbar>
+    </ion-toolbar>
+
+    <ion-list [hidden]="autocompleteItems.length == 0">
+        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+            {{ item.description }}
+        </ion-item>
+    </ion-list>
+
+        
+
+    <div id="mapcontainer">
+        <ion-fab id="centerButton" (click)="centerButton()"><ion-fab-button size="small" color="light"><ion-icon name="locate"></ion-icon></ion-fab-button></ion-fab>
+    </div>
+    <div #map id="map"> </div>
+ 
+	<ion-list id="iconButtons">
+
+        <img class="icon-button" id="smile" (click)="smileButton()" src="https://twemoji.maxcdn.com/2/svg/1f642.svg" />
+
+		<img class="icon-button" id="neutral" (click)="neutralButton()" src="https://twemoji.maxcdn.com/2/svg/1f610.svg"/>
+
+        <img class="icon-button" id="frown" (click)="frownButton()" src="https://twemoji.maxcdn.com/2/svg/1f641.svg"/>
+
+		<img class="icon-button" id="heart" (click)="heartButton()" src="https://twemoji.maxcdn.com/2/svg/2764.svg"/>
+
+		<ion-button id="moreButton"  (click)="moreButton()" color="primary">&#8226;&#8226;&#8226;</ion-button>
+
+	</ion-list>
+
+    <ion-button id="addButton" size="large" shape="round" fill="outline" (click)="addEmoji()" routerLink="../home" routerDirection="forward">Add Emoji</ion-button>
+
+</ion-content>
